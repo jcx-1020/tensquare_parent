@@ -1,4 +1,5 @@
 package com.tensquare.user.controller;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ import com.tensquare.user.service.UserService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import util.JwtUtil;
+
 /**
  * 控制器层
  * @author Administrator
@@ -33,6 +36,9 @@ public class UserController {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
+
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	/**
 	 * 查询全部数据
@@ -151,8 +157,10 @@ public class UserController {
 			return new Result(false,StatusCode.LOGINERROR,"登录失败");
 		}
 		//前后端可以通话操作，JWT实现
-
-
-		return new Result(true,StatusCode.OK,"登陆成功");
+		String token = jwtUtil.createJWT(user.getId(), user.getMobile(), "user");
+		Map<String,Object> map = new HashMap<>();
+		map.put("token",token);
+		map.put("roles","user");
+		return new Result(true,StatusCode.OK,"登陆成功",map);
 	}
 }

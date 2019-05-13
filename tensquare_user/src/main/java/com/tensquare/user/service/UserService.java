@@ -9,7 +9,9 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
+import javax.servlet.http.HttpServletRequest;
 
+import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import util.IdWorker;
 
 import com.tensquare.user.dao.UserDao;
 import com.tensquare.user.pojo.User;
+import util.JwtUtil;
 
 /**
  * 服务层
@@ -49,6 +52,13 @@ public class UserService {
 
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+
+	@Autowired
+	private HttpServletRequest request;
+
+	@Autowired
+	private JwtUtil jwtUtil;
+
 	/**
 	 * 查询全部列表
 	 * @return
@@ -127,6 +137,10 @@ public class UserService {
 	 * @param id
 	 */
 	public void deleteById(String id) {
+		String token = (String) request.getAttribute("claims_admin");
+		if (token == null || "".equals(token)){
+			throw new RuntimeException("权限不足！");
+		}
 		userDao.deleteById(id);
 	}
 
