@@ -2,6 +2,7 @@ package com.tensquare.qa.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.tensquare.qa.client.BaseClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,6 +36,9 @@ public class ProblemController {
 
 	@Autowired
 	private HttpServletRequest request;
+
+	@Autowired
+	private BaseClient baseClient;
 	
 	/**
 	 * 查询全部数据
@@ -151,5 +155,11 @@ public class ProblemController {
 	public Result waitlist(@PathVariable String labelid,@PathVariable int page,@PathVariable int size){
 		Page<Problem> pageData = problemService.waitlist(labelid,page,size);
 		return new Result(true, StatusCode.OK, "查询成功", new PageResult<Problem>(pageData.getTotalElements(),pageData.getContent()));
+	}
+
+	@RequestMapping(value = "/label/{labelId}",method = RequestMethod.GET)
+	public Result findByLabelId(@PathVariable String labelId){
+		Result result = baseClient.findById(labelId);
+		return result;
 	}
 }
