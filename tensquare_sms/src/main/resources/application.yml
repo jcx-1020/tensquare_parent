@@ -7,7 +7,7 @@ spring:
     host: 192.168.17.128
 aliyun:
   sms:
-    accessKeyId: LTAIdUzLci9KmN5F
-    accessKeySecret: mIfBE2NtTAGstiyq52a63OPkZTxN2D
-    template_code: SMS_152283891
-    sign_name: 香蕉c
+    accessKeyId: *
+    accessKeySecret: *
+    template_code: *
+    sign_name: *
